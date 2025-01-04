@@ -1,0 +1,119 @@
+Alright, let’s break **Step 1** (Dataset Preparation) into beginner-friendly, step-by-step guidance:
+
+---
+
+### **STEP 1: DATASET PREPARATION**
+**Objective**: Load and clean the three CSV files to make them ready for further analysis.
+
+---
+
+#### **1.1: Set Up Your Environment**
+1. **Install Python Tools**:
+   - Make sure you have Python installed. If not, download it [here](https://www.python.org/).
+   - Install **Jupyter Notebook** using `pip install notebook` if you haven’t already.
+   - Install libraries we’ll use:
+     ```bash
+     pip install pandas numpy
+     ```
+   - Launch your Jupyter Notebook by typing:
+     ```bash
+     jupyter notebook ("If this does not work, use python -m notebook")
+
+     ```
+
+2. **Create a Notebook**:
+   - Inside Jupyter, click `New → Python 3` to create a new notebook.
+
+---
+
+#### **1.2: Load the CSV Files**
+1. **Import the necessary libraries**:
+   Add this to the first cell of your notebook:
+   ```python
+   import pandas as pd
+   import numpy as np
+   ```
+
+2. **Load each CSV file**:
+   Assuming the files are named `USER_LOG.csv`, `ACTIVITY_LOG.csv`, and `COMPONENT_CODES.csv`, write:
+   ```python
+   # Load CSV files
+   user_log = pd.read_csv('USER_LOG.csv')
+   activity_log = pd.read_csv('ACTIVITY_LOG.csv')
+   component_codes = pd.read_csv('COMPONENT_CODES.csv')
+
+   # Display the first few rows to understand the structure
+   print(user_log.head())
+   print(activity_log.head())
+   print(component_codes.head())
+   ```
+   - If you don’t have these files yet, create mock data to simulate:
+     ```python
+     # Example of creating a small user log
+     data = {'Date': ['2024-12-01', '2024-12-02'],
+             'Time': ['12:00', '13:00'],
+             'User Full Name *Anonymized': ['User_1', 'User_2']}
+     user_log = pd.DataFrame(data)
+     print(user_log)
+     ```
+
+---
+
+#### **1.3: Clean the Data**
+1. **Rename Columns**:
+   - You need to rename the "User Full Name *Anonymized" column to "User_ID":
+     ```python
+     user_log.rename(columns={"User Full Name *Anonymized": "User_ID"}, inplace=True)
+     activity_log.rename(columns={"User Full Name *Anonymized": "User_ID"}, inplace=True)
+     ```
+
+2. **Remove Unwanted Data**:
+   - Exclude rows with `Component` as "System" or "Folder" in the `activity_log`:
+     ```python
+     # Assuming Component is a column in activity_log
+     activity_log = activity_log[~activity_log['Component'].isin(['System', 'Folder'])]
+     ```
+
+3. **Handle Missing Values**:
+   - Check for missing data:
+     ```python
+     print(user_log.isnull().sum())
+     print(activity_log.isnull().sum())
+     print(component_codes.isnull().sum())
+     ```
+   - Decide how to handle missing data:
+     - Fill missing values:
+       ```python
+       user_log.fillna("Unknown", inplace=True)
+       ```
+     - Drop rows with missing values:
+       ```python
+       activity_log.dropna(inplace=True)
+       ```
+
+---
+
+#### **1.4: Save Cleaned Data (Optional at This Stage)**
+- If you want to save the cleaned data for later use, write:
+  ```python
+  user_log.to_csv('cleaned_USER_LOG.csv', index=False)
+  activity_log.to_csv('cleaned_ACTIVITY_LOG.csv', index=False)
+  ```
+
+---
+
+#### **1.5: Verify Your Work**
+- Display the cleaned data:
+  ```python
+  print(user_log.head())
+  print(activity_log.head())
+  print(component_codes.head())
+  ```
+- Check basic statistics:
+  ```python
+  print(user_log.describe())
+  print(activity_log['Component'].value_counts())
+  ```
+
+---
+
